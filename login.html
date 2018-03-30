@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body class="login-page">
+<div class="login-box">
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">
+      <img src="http://interview.emicmh.com/img/logo.jpg" style="width:120px;height:72px;">
+    </p>
+    <form>
+      <div class="form-group has-feedback">
+        <input type="text" name="name" class="form-control" placeholder="请输入用户名">
+        <span class="glyphicon glyphicon-envelope form-control-feedback" aria-hidden="true"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" name="password" class="form-control" placeholder="请输入密码">
+        <span class="glyphicon glyphicon-lock form-control-feedback" aria-hidden="true"></span>
+      </div>
+      <div class="row">
+      </div>
+    </form>
+    <div class="social-auth-links text-center">
+      <a href="#" style="padding-left:0;text-align:center;" id="btn_login"
+         class="btn btn-block btn-social btn-facebook btn-flat">登陆</a>
+    </div>
+    <div class="social-auth-links text-center">
+      <a href="#" style="padding-left:0;text-align:center;" id="btn_regist"
+         class="btn btn-block btn-social btn-facebook btn-flat">注册</a>
+    </div>
+    <div class="social-auth-links text-center">
+      <a href="#" style="padding-left:0;text-align:center;" id="btn_loginout"
+         class="btn btn-block btn-social btn-facebook btn-flat">退出</a>
+    </div>
+  </div>
+  <!-- /.login-box-body -->
+</div>
+
+<script>
+  let login = document.getElementById('btn_login');
+  let regist = document.getElementById('btn_regist');
+  let loginout = document.getElementById('btn_loginout');
+
+  function fetchFn(ele,type,url,href){
+    ele.addEventListener(type, (e) => {
+      let use = document.getElementsByName('name')[0].value;
+      let psd = document.getElementsByName('password')[0].value;
+
+      fetch(url, {
+        method: 'post',
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: JSON.stringify({"name": use, "password": psd}) //
+      }).then((res) => {
+        if (res.ok) {
+          res.json().then(function (json) {
+            console.log(json);
+            if (json.code == '200') {
+              location.href = href; //'home.html';
+            }
+          })
+        }
+      })
+    });
+  }
+
+  fetchFn(login,'click','http://interview.emicmh.com/login','home.html');
+  fetchFn(regist,'click','http://interview.emicmh.com/signup','home.html');
+
+  loginout.addEventListener('click', (e) => {
+    fetch('http://interview.emicmh.com/logout', { // 地址应该是变了，我登录不进去，把网址换一下应该就可以了
+      method: 'post',
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: ''
+    }).then((res) => {
+      if (res.ok) {
+        res.json().then(function (json) {
+          if (json.code == '200') {
+            location.href = 'login.html';
+          }
+        })
+      }
+    })
+  });
+
+</script>
+</body>
+</html>

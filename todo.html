@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/todo.css">
+</head>
+<body>
+<div id="app" v-cloak>
+  <div class="mainContent">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="my">我的一天</h3>
+              <div class="tasksToolbar tasksToolbar-subline">
+                <span class="data">三月 30日星期五</span>
+              </div>
+            </div>
+            <div class="panel-body">
+              <ul class="list-group">
+                <li
+                    role="presentation"
+                    class="list-group-item"
+                    v-for="todo in recounts">
+                    <span :class="{del:todo.isSelected}"
+                          v-show="cur != todo">
+                      <input type="checkbox" v-model="todo.isSelected">
+                      <label @dblclick="edit(todo)">{{todo.title}}</label>
+                    </span>
+                  <input
+                      type="text"
+                      v-model="todo.title"
+                      v-show="cur == todo"
+                      @keydown.enter="config"
+                      @blur="config"
+                      v-focus="cur == todo">
+                  <button
+                      type="button"
+                      class="btn btn-xs btn-danger pull-right"
+                      @click="remove(todo)">
+                    &times;
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="panel-footer posFooter">
+              <ul class="nav nav-pills">
+                <li :class="{active:hash === '#/all'}">
+                  <a href="#/all" class="btn-xs">全部任务</a>
+                </li>
+                <li :class="{active:hash === '#/finish'}">
+                  <a href="#/finish" class="btn-xs">已完成</a>
+                </li>
+                <li :class="{active:hash === '#/unfinish'}">
+                  <a href="#/unfinish" class="btn-xs">未完成</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="position">
+    <div class="inputIn" v-show='addShow'>
+      <input
+          type="text"
+          class="form-control addInput"
+          v-model="title"
+          @keydown.enter="add"
+          v-focus='addShow'>
+      <a
+          href="javascript:;"
+          class="cancelInput"
+          @click="cancelHandle">
+        取消
+      </a>
+    </div>
+    <p class="addHandle" @click="addHandle">添加待办事项</p>
+  </div>
+</div>
+
+<script src="vue.js"></script>
+<script>
+  let vm = new Vue({
+    el: "#app",
+    created() {
+      this.todos = localStorage.getItem('todos') ? JSON.parse(localStorage.getItem('todos')) : [];
+      this.hash = window.location.hash || '#/all';
+      window.addEventListener('hashchange', () => {
+        this.hash = window.location.hash;
+      }, false)
+
+    },
+    data: {
+      hash: '',
+      title: '',
+      todos: [],
+      cur: '',
+      addShow: false
+    },
+    computed: {
+      count() {
+        return this.todos.filter((item) => {
+          return !item.isSelected;
+        }).length;
+      },
+      recounts() {
+        if (this.hash === '#/all') {
+          return this.todos;
+        }
+        if (this.hash === '#/finish') {
+          return this.todos.filter((item) => {
+            return item.isSelected;
+          })
+        }
+        if (this.hash === '#/unfinish') {
+          return this.todos.filter((item) => {
+            return !item.isSelected;
+          })
+        }
+      }
+    },
+    watch: {
+      todos: {
+        handler(newVal) {
+          localStorage.setItem('todos', JSON.stringify(newVal));
+        },
+        deep: true
+      }
+    },
+    methods: {
+      add() {
+        if (this.title === '') return;
+        this.todos.push({
+          isSelected: false,
+          title: this.title
+        });
+        this.title = '';
+        this.addShow = false;
+      },
+      edit(todo) {
+        this.cur = todo;
+      },
+      config() {
+        this.cur = '';
+      },
+      remove(todo) {
+        this.todos = this.todos.filter((item) => {
+          return item != todo;
+        })
+      },
+      addHandle() {
+        this.addShow = true;
+      },
+      cancelHandle(){
+        this.addShow = false;
+        this.title = '';
+      }
+    },
+    directives: {
+      focus(el, binding) {
+        if (binding.value) {
+          el.focus();
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

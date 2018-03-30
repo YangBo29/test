@@ -1,0 +1,47 @@
+html,body{
+    width: 100%;
+}
+.login-page, .register-page {
+    background: #d2d6de;
+}
+.login-box, .register-box {
+    width: 360px;
+    margin: 10% auto 0;
+}
+.login-box-body, .register-box-body {
+    background: #fff;
+    padding: 20px;
+    border-top: 0;
+    color: #666;
+}
+.login-box-msg, .register-box-msg {
+    margin: 0;
+    text-align: center;
+    padding: 0 20px 20px 20px;
+}
+.btn-facebook {
+    color: #fff;
+    background-color: #3b5998;
+    border-color: rgba(0,0,0,0.2);
+}
+.btn-social {
+    position: relative;
+    padding-left: 44px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 0;
+}
+.social-auth-links {
+    margin: 10px 0;
+}
+.social-auth-links a {
+    display: block;
+    color: #fff;
+}
+    .social-auth-links a:hover {
+        color: #fff;
+    background-color: #2d4373;
+    border-color: rgba(0,0,0,0.2);
+}
