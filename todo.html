@@ -22,8 +22,7 @@
             </div>
             <div class="panel-body">
               <ul class="list-group">
-                <li
-                    role="presentation"
+                <li role="presentation"
                     class="list-group-item"
                     v-for="todo in recounts">
                     <span :class="{del:todo.isSelected}"
@@ -31,17 +30,15 @@
                       <input type="checkbox" v-model="todo.isSelected">
                       <label @dblclick="edit(todo)">{{todo.title}}</label>
                     </span>
-                  <input
-                      type="text"
-                      v-model="todo.title"
-                      v-show="cur == todo"
-                      @keydown.enter="config"
-                      @blur="config"
-                      v-focus="cur == todo">
-                  <button
-                      type="button"
-                      class="btn btn-xs btn-danger pull-right"
-                      @click="remove(todo)">
+                  <input type="text"
+                         v-model="todo.title"
+                         v-show="cur == todo"
+                         @keydown.enter="config"
+                         @blur="config"
+                         v-focus="cur == todo">
+                  <button type="button"
+                          class="btn btn-xs btn-danger pull-right"
+                          @click="remove(todo)">
                     &times;
                   </button>
                 </li>
@@ -67,16 +64,14 @@
   </div>
   <div class="position">
     <div class="inputIn" v-show='addShow'>
-      <input
-          type="text"
-          class="form-control addInput"
-          v-model="title"
-          @keydown.enter="add"
-          v-focus='addShow'>
-      <a
-          href="javascript:;"
-          class="cancelInput"
-          @click="cancelHandle">
+      <input type="text"
+             class="form-control addInput"
+             v-model="title"
+             @keydown.enter="add"
+             v-focus='addShow'>
+      <a href="javascript:;"
+         class="cancelInput"
+         @click="cancelHandle">
         取消
       </a>
     </div>
@@ -84,92 +79,7 @@
   </div>
 </div>
 
-<script src="vue.js"></script>
-<script>
-  let vm = new Vue({
-    el: "#app",
-    created() {
-      this.todos = localStorage.getItem('todos') ? JSON.parse(localStorage.getItem('todos')) : [];
-      this.hash = window.location.hash || '#/all';
-      window.addEventListener('hashchange', () => {
-        this.hash = window.location.hash;
-      }, false)
-
-    },
-    data: {
-      hash: '',
-      title: '',
-      todos: [],
-      cur: '',
-      addShow: false
-    },
-    computed: {
-      count() {
-        return this.todos.filter((item) => {
-          return !item.isSelected;
-        }).length;
-      },
-      recounts() {
-        if (this.hash === '#/all') {
-          return this.todos;
-        }
-        if (this.hash === '#/finish') {
-          return this.todos.filter((item) => {
-            return item.isSelected;
-          })
-        }
-        if (this.hash === '#/unfinish') {
-          return this.todos.filter((item) => {
-            return !item.isSelected;
-          })
-        }
-      }
-    },
-    watch: {
-      todos: {
-        handler(newVal) {
-          localStorage.setItem('todos', JSON.stringify(newVal));
-        },
-        deep: true
-      }
-    },
-    methods: {
-      add() {
-        if (this.title === '') return;
-        this.todos.push({
-          isSelected: false,
-          title: this.title
-        });
-        this.title = '';
-        this.addShow = false;
-      },
-      edit(todo) {
-        this.cur = todo;
-      },
-      config() {
-        this.cur = '';
-      },
-      remove(todo) {
-        this.todos = this.todos.filter((item) => {
-          return item != todo;
-        })
-      },
-      addHandle() {
-        this.addShow = true;
-      },
-      cancelHandle(){
-        this.addShow = false;
-        this.title = '';
-      }
-    },
-    directives: {
-      focus(el, binding) {
-        if (binding.value) {
-          el.focus();
-        }
-      }
-    }
-  });
-</script>
+<script src="js/vue.js"></script>
+<script src="js/todo.js"></script>
 </body>
 </html>
